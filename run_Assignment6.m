@@ -1,8 +1,9 @@
 %% 
 clc; clear all;
-addpath("data\")
-addpath("Pricing_Ex1\")
-addpath("utilities\")
+addpath('data');
+addpath('Pricing_Ex1');
+addpath('Pricing_Ex1');
+addpath('utilities');
 
 %% Parameters
 load('eurostoxx_Poli.mat')
@@ -45,3 +46,6 @@ print_comparison(X_NIG, X_BS, sigma_Black);
 % point e
 
 %% Ex2
+
+%% Run Bermudian Swaption part
+run_Bermudian_HW;
