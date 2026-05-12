@@ -27,13 +27,13 @@ useful_data = build_useful_data(start_date, T, S0, q, K_strike, dates, T_curve, 
 [X_NIG, PV_A_NIG, PV_B_NIG, Q_NIG] = price_upfront_NIG(coupon_1y, coupon_2y, sigma_NIG, kappa_NIG, eta_NIG, spread, useful_data);
 print_results('Point a — NIG', X_NIG, PV_A_NIG, PV_B_NIG, Q_NIG, Notional);
 
-% Point b — Black-Scholes pricing
-sigma_BS = interp1(cSelect.strikes, cSelect.surface, K_strike, 'linear');
-[X_BS, PV_A_BS, PV_B_BS, Q_BS] = price_upfront_BS(K_strike, spread, coupon_1y, coupon_2y, useful_data, sigma_BS);
-print_results('Point b — Black-Scholes', X_BS, PV_A_BS, PV_B_BS, Q_BS, Notional);
+% Point b — Black pricing
+sigma_Black = interp1(cSelect.strikes, cSelect.surface, K_strike, 'linear');
+[X_BS, PV_A_BS, PV_B_BS, Q_BS] = price_upfront_BS(K_strike, spread, coupon_1y, coupon_2y, useful_data, sigma_Black);
+print_results('Point b — Black', X_BS, PV_A_BS, PV_B_BS, Q_BS, Notional);
 
 % Comparison
-print_comparison(X_NIG, X_BS, sigma_BS);
+print_comparison(X_NIG, X_BS, sigma_Black);
 
 % point c
 % only discussion in the report
