@@ -2,8 +2,8 @@
 clc; clear all;
 addpath('data');
 addpath('Pricing_Ex1');
-addpath(genpath('Pricing_Ex1'));
-addpath('Pricing_Ex2');
+addpath('point_1d')
+addpath('Pricing_Ex2\');
 addpath('utilities');
 
 %% Parameters
