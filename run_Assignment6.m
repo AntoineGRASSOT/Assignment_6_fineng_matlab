@@ -21,7 +21,7 @@ start_date = datenum('19-Feb-2008');
 S0         = cSelect.reference;        q          = cSelect.dividends;
 coupon_1y  = 0.06;                     coupon_2y  = 0.02;
 K_strike   = 3200;                     sigma_NIG  = 0.20;
-kappa_NIG  = 1;                        eta_NIG    = 3;
+kappa_NIG  = 1;                        eta_NIG    = 0.03;
 useful_data = build_useful_data(start_date, T, S0, q, K_strike, dates, T_curve, zRates);
 
 % Point a — NIG pricing
@@ -36,14 +36,18 @@ print_results('Point b — Black', X_BS, PV_A_BS, PV_B_BS, Q_BS, Notional);
 % Comparison
 print_comparison(X_NIG, X_BS, sigma_Black);
 
-% point c
-% only discussion in the report
-
-% point d
+%% point d
 % now we need the distributions of S1 and S2 jointly, we cannot use what we
-% did before, maybe Monte Carlo NIG
-
-% point e
+T_3y = 3; rng(42);
+useful_data_3y = build_useful_data(start_date, T_3y, S0, q, K_strike, dates, T_curve, zRates);
+N_paths = 100000; 
+coupon_early = 0.06;
+coupon_final = 0.02;
+[X_path, PV_A_path, PV_B_path, Q_stop1, Q_stop2, Q_survive3] = ...
+    price_upfront_NIG_path(coupon_early, coupon_final, sigma_NIG, ...
+                           kappa_NIG, eta_NIG, spread, useful_data_3y, N_paths);
+print_results_path('Point D — 3Y Autocallable (NIG Monte Carlo)', ...
+    X_path, PV_A_path, PV_B_path, Q_stop1, Q_stop2, Q_survive3, Notional);
 
 %% Ex2
 

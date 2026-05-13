@@ -6,7 +6,7 @@ current_date = start_date;
 
 for i = 1:num_payments
     current_date = datemnth(current_date, 12);  % add 12 months
-    current_date = busdate(current_date - 1, 'modifiedfollow');
+    current_date = busdate(current_date - 1, 'follow');
     payment_dates(i) = current_date;
 end
 
