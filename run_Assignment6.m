@@ -24,11 +24,11 @@ K_strike   = 3200;                     sigma_NIG  = 0.20;
 kappa_NIG  = 1;                        eta_NIG    = 0.03;
 useful_data = build_useful_data(start_date, T, S0, q, K_strike, dates, T_curve, zRates);
 
-% Point a — NIG pricing
+%% Point a — NIG pricing
 [X_NIG, PV_A_NIG, PV_B_NIG, Q_NIG] = price_upfront_NIG(coupon_1y, coupon_2y, sigma_NIG, kappa_NIG, eta_NIG, spread, useful_data);
 print_results('Point a — NIG', X_NIG, PV_A_NIG, PV_B_NIG, Q_NIG, Notional);
 
-% Point b — Black pricing
+%% Point b — Black pricing
 sigma_Black = interp1(cSelect.strikes, cSelect.surface, K_strike, 'linear');
 [X_BS, PV_A_BS, PV_B_BS, Q_BS] = price_upfront_BS(K_strike, spread, coupon_1y, coupon_2y, useful_data, sigma_Black);
 print_results('Point b — Black', X_BS, PV_A_BS, PV_B_BS, Q_BS, Notional);
@@ -36,7 +36,7 @@ print_results('Point b — Black', X_BS, PV_A_BS, PV_B_BS, Q_BS, Notional);
 % Comparison
 print_comparison(X_NIG, X_BS, sigma_Black);
 
-%% point d
+%% point d- MC pricing
 % now we need the distributions of S1 and S2 jointly, we cannot use what we
 T_3y = 3; rng(42);
 useful_data_3y = build_useful_data(start_date, T_3y, S0, q, K_strike, dates, T_curve, zRates);
@@ -48,6 +48,17 @@ coupon_final = 0.02;
                            kappa_NIG, eta_NIG, spread, useful_data_3y, N_paths);
 print_results_path('Point D — 3Y Autocallable (NIG Monte Carlo)', ...
     X_path, PV_A_path, PV_B_path, Q_stop1, Q_stop2, Q_survive3, Notional);
+%% Point e — Pricing Error using Black Model
+sigma_Black = interp1(cSelect.strikes, cSelect.surface, K_strike, 'linear');
+[X_BS, PV_A_BS, PV_B_BS] = price_upfront_BS_path(coupon_early, coupon_final, sigma_Black, spread, useful_data_3y, N_paths);
+Pricing_Error_perc = (X_BS - X_path) * 100;
+Pricing_Error_EUR  = (X_BS - X_path) * Notional;
+fprintf('\n=== Point E — Pricing Error (Black vs NIG) ===\n');
+fprintf('  Upfront X%% (NIG)   = %.4f%%\n', X_path * 100);
+fprintf('  Upfront X%% (Black) = %.4f%%\n', X_BS * 100);
+fprintf('  Pricing Error (%%)  = %.4f%%\n', Pricing_Error_perc);
+fprintf('  Pricing Error (EUR)= %.2f EUR\n', Pricing_Error_EUR);
+
 
 %% Ex2
 
