@@ -1,6 +1,7 @@
 clear; clc;
 
 fprintf('Running Bermudian Swaption Pricing via Hull-White...\n\n');
+addpath('../utilities')
 
 %% Hull-White parameters from assignment
 a = 0.11;          % mean reversion speed

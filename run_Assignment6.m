@@ -12,7 +12,7 @@ formatDate = 'dd/mm/yyyy';
 % bootstrap datas to compute zero rates
 [datesSet, ratesSet] = readExcelData('MktData_CurveBootstrap.xls', formatDate);
 [dates, discounts, zRates]=bootstrap(datesSet, ratesSet);
-T_curve = yearfrac(dates(1), dates, 3); % ACT/365
+T_curve = yearfrac(datesSet.settlement, dates, 3); % ACT/365
 
 %% Ex1
 % Parameters
@@ -62,6 +62,44 @@ fprintf('  Pricing Error (EUR)= %.2f EUR\n', Pricing_Error_EUR);
 
 
 %% Ex2
+a = 0.11;
+sigma = 0.008;
+K = 0.05;
+maturity = 10;
+curve.settlement = datesSet.settlement;
+curve.dates = [datesSet.settlement; dates];
+curve.discounts = [1; discounts];
+curve.zRates = [0; zRates];
+curve.times =  [0; T_curve];
 
-%% Run Bermudian Swaption part
-run_Bermudian_HW;
+%% QUESTION a -Run Bermudian Swaption part
+
+
+%% QUESTION c - Bermudan bounds via Jamshidian
+exerciseTimes = 2:9;
+
+[lowerBound, upperBound, europeanPrices] = bermudan_bounds_HW(exerciseTimes, maturity, K, curve, a, sigma);
+
+fprintf('\n=========================================\n');
+fprintf('European Swaption Prices (Jamshidian)\n');
+fprintf('=========================================\n\n');
+
+for i = 1:length(exerciseTimes)
+
+    Talpha = exerciseTimes(i);
+
+    priceBps = europeanPrices(i) * 1e4;
+
+    fprintf('Exercise at T_alpha = %2dY : %10.4f bps\n', Talpha, priceBps);
+
+end
+
+fprintf('\n=========================================\n');
+fprintf('Bermudan Bounds\n');
+fprintf('=========================================\n\n');
+fprintf('Lower Bound : %10.4f bps\n', lowerBound * 1e4);
+fprintf('Upper Bound : %10.4f bps\n', upperBound * 1e4);
+fprintf('\n');
+
+
+
