@@ -1,5 +1,13 @@
 clear; clc;
 
+%% Add required paths
+thisFile = mfilename('fullpath');
+thisDir = fileparts(thisFile);          % Pricing_Ex2 folder
+projectRoot = fileparts(thisDir);       % Assignment_6_fineng_matlab folder
+
+addpath(thisDir);
+addpath(fullfile(projectRoot, 'utilities'));
+
 fprintf('Running Bermudian Swaption Pricing via Hull-White...\n\n');
 addpath('../utilities')
 
